@@ -1,1 +1,1 @@
-Django Practise
+Django Practice
