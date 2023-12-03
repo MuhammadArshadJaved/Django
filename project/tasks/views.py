@@ -4,22 +4,22 @@ from django import forms
 from django.urls import reverse
 # Create your views here.
 
-tasks=['foo','baz','buz']
-
 class newtaskform(forms.Form):
     task= forms.CharField(label='new task')
 
 def index(request):
+    if 'tasks' not in request.session:
+        request.session['tasks'] = []
     return render(request, 'tasks/index.html',{
-        'tasks': tasks
+        'tasks': request.session['tasks']
     })
 
 def add(request):
     if request.method =='POST':
         form=newtaskform(request.POST)
         if form.is_valid():
-            task=form.cleaned_data['task']
-            tasks.append(task)
+            task=form.cleaned_data["task"]
+            request.session['tasks'] +=[task]
             return HttpResponseRedirect(reverse('tasks:index'))
         else:
             return render(request, 'task/add.html',{
